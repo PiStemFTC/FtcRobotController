@@ -16,7 +16,7 @@ public class TestOpModeKP extends LinearOpMode {
     //private DcMotor motorTest;
     //private DigitalChannel digitalTouch;
     //private DistanceSensor sensorColorRange;
-    private Servo servoTest = hardwareMap.get(Servo.class, "servo");
+    private Servo servo = hardwareMap.get(Servo.class, "servo");
     private long CYCLE_MS;
     private double position;
 
@@ -34,7 +34,7 @@ public class TestOpModeKP extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.addData("Status", "Not running");
             telemetry.update();
-            servoTest.setPosition(position);
+            servo.setPosition(position);
             position+=0.1;
             if(position>1.0){
                 position=0.0;
