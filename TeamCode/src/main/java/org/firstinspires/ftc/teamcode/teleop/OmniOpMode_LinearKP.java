@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -71,6 +72,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    private Servo servo = null;
 
     @Override
     public void runOpMode() {
@@ -81,6 +83,9 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
+        servo = hardwareMap.get(Servo.class, "servo");
+
+        boolean currentPixelButtonState = false;
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -101,6 +106,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        servo.setPosition(0.0);
         waitForStart();
         runtime.reset();
 
@@ -112,6 +118,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral =  gamepad1.left_stick_x;
             double yaw     =  gamepad1.right_stick_x;
+            boolean pixelButtonState = gamepad1.left_bumper;
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -155,6 +162,17 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
+
+            if(currentPixelButtonState != pixelButtonState){
+                if(pixelButtonState){
+                    servo.setPosition(1.0);
+                }
+                else{
+                    servo.setPosition(0.0);
+                }
+
+                currentPixelButtonState = pixelButtonState;
+            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
