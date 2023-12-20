@@ -72,10 +72,14 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    private DcMotor linearSlide = null;
+    private DcMotor leftLauncher = null;
+    private DcMotor rightLauncher = null;
     private Servo servo = null;
 
     @Override
     public void runOpMode() {
+        int initialSlidePosition;
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
@@ -83,6 +87,9 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
+        linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
+        leftLauncher = hardwareMap.get(DcMotor.class, "leftLauncher");
+        rightLauncher = hardwareMap.get(DcMotor.class, "rightLauncher");
         servo = hardwareMap.get(Servo.class, "servo");
 
         boolean currentPixelButtonState = false;
@@ -101,10 +108,15 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftLauncher.setDirection(DcMotor.Direction.REVERSE);
+
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+        initialSlidePosition = linearSlide.getCurrentPosition();
+        final int maxSlideThrow = 5500;
 
         servo.setPosition(0.0);
         waitForStart();
@@ -114,11 +126,16 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         while (opModeIsActive()) {
             double max;
 
+
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
             double lateral =  gamepad1.left_stick_x;
             double yaw     =  gamepad1.right_stick_x;
             boolean pixelButtonState = gamepad1.left_bumper;
+            boolean launch = gamepad1.y;
+
+            double extend = gamepad2.right_stick_y;
+
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
@@ -126,6 +143,16 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             double rightFrontPower = axial - lateral - yaw;
             double leftBackPower   = axial - lateral + yaw;
             double rightBackPower  = axial + lateral - yaw;
+
+            if(launch){
+                leftLauncher.setPower(1.0);
+                rightLauncher.setPower(1.0);
+            }
+            else{
+                leftLauncher.setPower(0.0);
+                rightLauncher.setPower(0.0);
+            }
+
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -163,6 +190,24 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
 
+            if (Math.abs(linearSlide.getCurrentPosition() - initialSlidePosition) > maxSlideThrow) {
+                /* Only allow retraction (positive) when over max throw */
+                if (extend > 0.0)
+                    linearSlide.setPower(extend);
+                else
+                    linearSlide.setPower(0.0); // stop the motor
+            }
+            else if (Math.abs(linearSlide.getCurrentPosition() - initialSlidePosition) <= 80) {
+                /* Only allow extension (negative) when we're near the initial position */
+                if (extend < 0.0)
+                    linearSlide.setPower(extend);
+                else
+                    linearSlide.setPower(0.0); // stop the motor
+            }
+            else {
+                linearSlide.setPower(extend);
+            }
+
             if(currentPixelButtonState != pixelButtonState){
                 if(pixelButtonState){
                     servo.setPosition(1.0);
@@ -178,6 +223,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+            telemetry.addData("Slide position", "%d", Math.abs(linearSlide.getCurrentPosition() - initialSlidePosition));
             telemetry.update();
         }
     }}
