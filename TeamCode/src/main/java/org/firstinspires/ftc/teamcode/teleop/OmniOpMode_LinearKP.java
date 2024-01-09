@@ -75,6 +75,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
     private DcMotor linearSlide = null;
     private DcMotor leftLauncher = null;
     private DcMotor rightLauncher = null;
+    private DcMotor jointA = null;
     private Servo servo = null;
 
     @Override
@@ -90,6 +91,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
         leftLauncher = hardwareMap.get(DcMotor.class, "leftLauncher");
         rightLauncher = hardwareMap.get(DcMotor.class, "rightLauncher");
+        jointA = hardwareMap.get(DcMotor.class, "jointA");
         servo = hardwareMap.get(Servo.class, "servo");
 
         boolean currentPixelButtonState = false;
@@ -133,7 +135,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             double yaw     =  gamepad1.right_stick_x;
             boolean pixelButtonState = gamepad1.left_bumper;
             boolean launch = gamepad1.y;
-
+            double swivel = gamepad2.left_stick_y;
             double extend = gamepad2.right_stick_y;
 
 
@@ -152,7 +154,6 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
                 leftLauncher.setPower(0.0);
                 rightLauncher.setPower(0.0);
             }
-
 
             // Normalize the values so no wheel power exceeds 100%
             // This ensures that the robot maintains the desired motion.
@@ -224,6 +225,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
             telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
             telemetry.addData("Slide position", "%d", Math.abs(linearSlide.getCurrentPosition() - initialSlidePosition));
+            telemetry.addData("Joint position", "%d", Math.abs(jointA.getCurrentPosition() - initialSlidePosition));
             telemetry.update();
         }
     }}
