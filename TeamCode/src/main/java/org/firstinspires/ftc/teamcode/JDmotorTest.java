@@ -48,21 +48,22 @@ public class JDmotorTest extends LinearOpMode {
             strafeCorrected[i] = strafe[i] * FrBwCorrections[i];
         }
 
-       // final float [] rot = new float[] {1, 1, 1, 1};
-
-        //float [] rotCorrected = new float[] { 1, 1, 1, 1};
-        //for(int i = 0; i < 4; i++)
-        //{
-        //    rotCorrected[i] = rot[i];
-        //}
-
-        final float [] rotCorrections = new float[] {1, 1, 1, 1};
+        final float [] rotCorrections = new float[] {-1, -1, 1, -1};
         for(DcMotor motor : motors)
         {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
+
+       final float [] rot = new float[] {-1, -1, 1, -1};
+
+        float [] rotCorrected = new float[] { 1, 1, 1, 1};
+        for(int i = 0; i < 4; i++)
+        {
+            rotCorrected[i] = rot[i] * rotCorrections[i];
+        }
+
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
