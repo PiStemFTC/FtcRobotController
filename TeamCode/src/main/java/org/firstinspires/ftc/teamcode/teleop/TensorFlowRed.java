@@ -19,8 +19,8 @@ import java.util.List;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
-public class TensorFlow extends LinearOpMode {
+@TeleOp(name = "Concept: TensorFlow Object Detection Red", group = "Concept")
+public class TensorFlowRed extends LinearOpMode {
 
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
 
@@ -81,7 +81,7 @@ public class TensorFlow extends LinearOpMode {
                 // Use setModelAssetName() if the TF Model is built in as an asset.
                 // Use setModelFileName() if you have downloaded a custom team model to the Robot Controller.
                 //.setModelAssetName(TFOD_MODEL_ASSET)
-                //.setModelFileName(Team_Element_Red)
+                .setModelFileName("TeamElement_Red.tflite")
 
                 //.setModelLabels(LABELS)
                 .setIsModelTensorFlow2(true)
