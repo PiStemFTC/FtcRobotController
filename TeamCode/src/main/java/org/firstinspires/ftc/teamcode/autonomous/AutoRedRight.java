@@ -17,7 +17,7 @@ public class AutoRedRight extends LinearOpMode {
         double DRIVE_GEAR_REDUCTION;
         double DRIVE_COUNTS_PER_MM;
 
-        grandma = new Grandma();
+        grandma = new Grandma(ArenaColor.Red);
         grandma.initializeHardware(hardwareMap);
 
         WHEEL_CIRCUMFERENCE_MM = 90 * Math.PI;
