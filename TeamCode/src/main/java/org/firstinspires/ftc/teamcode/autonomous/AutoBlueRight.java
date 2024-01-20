@@ -34,9 +34,6 @@ public class AutoBlueRight extends LinearOpMode {
             grandma.servoMax();
             sleep(2000);
 
-
-
-
         }
 
     }

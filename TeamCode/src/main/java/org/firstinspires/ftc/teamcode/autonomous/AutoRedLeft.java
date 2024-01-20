@@ -28,14 +28,12 @@ public class AutoRedLeft extends LinearOpMode {
 
         grandma.servoMin();
         waitForStart();
-        if (opModeIsActive()){
+        while (opModeIsActive()){
             //2000 = 33.5 cm
             //60 per cm
             //152 per in
-            grandma.turn(90);
-            grandma.forward(95);
-            grandma.servoMax();
-            sleep(2000);
+            grandma.chaseDuck(telemetry);
+            telemetry.update();
 
 
 

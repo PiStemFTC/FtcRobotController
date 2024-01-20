@@ -6,10 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.tfod.TfodProcessor;
+
+import java.util.List;
 
 public class Grandma {
     private static final boolean USE_WEBCAM = true;
@@ -111,6 +115,42 @@ public class Grandma {
         visionPortal.setProcessorEnabled(tfod, true);
 
     }   // end method initTfod()
+
+    public void chaseDuck(Telemetry telemetry){
+        final double width = 1280;
+        final double height = 720;
+
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        telemetry.addData("# Objects Detected", currentRecognitions.size());
+
+        // Step through the list of recognitions and display info for each one.
+        for (Recognition recognition : currentRecognitions) {
+            double x = (recognition.getLeft() + recognition.getRight()) / 2;
+            double y = (recognition.getTop() + recognition.getBottom()) / 2;
+            double z = (x-(width/2));
+
+            if(Math.abs(z)/width > 0.05){
+                if(z > 0){
+                    turn(5);
+                } else{
+                    turn(-5);
+                }
+            } else{
+               if(height-recognition.getBottom() > 0){
+                   forward(1);
+               }
+
+            }
+
+            telemetry.addData("", " ");
+            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
+            telemetry.addData("- Position", "%.0f / %.0f", x, y);
+            telemetry.addData("- Size", "%.0f x %.0f", recognition.getWidth(), recognition.getHeight());
+            telemetry.addData("z","%.02f",z);
+
+            break;
+        }
+    }
 
     public void forward(float inches){
         float amountPerInch = 152.4f;
