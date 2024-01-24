@@ -110,6 +110,7 @@ public class TensorFlowRed extends LinearOpMode {
         // Set the stream format; MJPEG uses less bandwidth than default YUY2.
         builder.setStreamFormat(VisionPortal.StreamFormat.MJPEG);
 
+
         builder.setAutoStopLiveView(true);
 
         // Set and enable the processor.
