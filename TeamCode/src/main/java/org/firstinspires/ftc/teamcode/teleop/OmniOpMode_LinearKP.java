@@ -75,7 +75,9 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
     private DcMotor linearSlide = null;
     private DcMotor launcher = null;
     private DcMotor jointA = null;
-    private Servo servo = null;
+    //private Servo servo = null;
+    private Servo clawLeft = null;
+    private Servo clawRight = null;
 
     @Override
     public void runOpMode() {
@@ -83,14 +85,16 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFrontDrive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "leftBackDrive");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFrontDrive");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
         linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
         launcher = hardwareMap.get(DcMotor.class, "launcher");
         jointA = hardwareMap.get(DcMotor.class, "jointA");
-        servo = hardwareMap.get(Servo.class, "servo");
+        //servo = hardwareMap.get(Servo.class, "servo");
+        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
+        clawRight = hardwareMap.get(Servo.class, "clawRight");
 
         boolean currentPixelButtonState = false;
 
@@ -115,8 +119,9 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 
         //linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         final int maxSlideThrow = 5000;
+        final int maxSwivel = 1000;
 
-        servo.setPosition(0.0);
+        //servo.setPosition(0.0);
         waitForStart();
         runtime.reset();
 
@@ -126,51 +131,73 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial   = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
-            boolean pixelButtonState = gamepad1.left_bumper;
+            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
+            double lateral = gamepad1.left_stick_x;
+            double yaw = gamepad1.right_stick_x;
             boolean launch = gamepad1.y;
             double swivel = gamepad2.left_stick_y;
             double extend = gamepad2.right_stick_y;
+            //boolean openL = gamepad1.left_bumper;
+            //boolean openR = gamepad1.right_bumper;
+            //boolean closeR = gamepad2.right_trigger > 0.1;
+            //boolean closeL = gamepad2.left_trigger > 0.1;
 
 
             // Combine the joystick requests for each axis-motion to determine each wheel's power.
             // Set up a variable for each drive wheel to save the power level for telemetry.
-            double leftFrontPower  = axial + lateral + yaw;
+            double leftFrontPower = axial + lateral + yaw;
             double rightFrontPower = axial - lateral - yaw;
-            double leftBackPower   = axial - lateral + yaw;
-            double rightBackPower  = axial + lateral - yaw;
+            double leftBackPower = axial - lateral + yaw;
+            double rightBackPower = axial + lateral - yaw;
 
-            if(launch){
+            if (launch) {
                 launcher.setPower(1.0);
-            }
-            else{
+            } else {
                 launcher.setPower(0.0);
             }
 
-            // Normalize the values so no wheel power exceeds 100%
-            // This ensures that the robot maintains the desired motion.
-            max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-            max = Math.max(max, Math.abs(leftBackPower));
-            max = Math.max(max, Math.abs(rightBackPower));
+            while (opModeIsActive()) {
+                // check to see if we need to move the servo.
+                if (gamepad2.left_bumper) {
+                    // move to 0 degrees.
+                    clawLeft.setPosition(0);
+                } else if (gamepad2.left_trigger > 0.1) {
+                    // move to 90 degrees.
+                    clawLeft.setPosition(0.5);
+                }
 
-            if (max > 1.0) {
-                leftFrontPower  /= max;
-                rightFrontPower /= max;
-                leftBackPower   /= max;
-                rightBackPower  /= max;
-            }
+                while (opModeIsActive()) {
+                    // check to see if we need to move the servo.
+                    if (gamepad2.right_bumper) {
+                        // move to 0 degrees.
+                        clawRight.setPosition(0);
+                    } else if (gamepad2.right_trigger > 0.1 ) {
+                        // move to 90 degrees.
+                        clawRight.setPosition(0.5);
+                    }
 
-            // This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
+                    // Normalize the values so no wheel power exceeds 100%
+                    // This ensures that the robot maintains the desired motion.
+                    max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+                    max = Math.max(max, Math.abs(leftBackPower));
+                    max = Math.max(max, Math.abs(rightBackPower));
+
+                    if (max > 1.0) {
+                        leftFrontPower /= max;
+                        rightFrontPower /= max;
+                        leftBackPower /= max;
+                        rightBackPower /= max;
+                    }
+
+                    // This is test code:
+                    //
+                    // Uncomment the following code to test your motor directions.
+                    // Each button should make the corresponding motor run FORWARD.
+                    //   1) First get all the motors to take to correct positions on the robot
+                    //      by adjusting your Robot Configuration if necessary.
+                    //   2) Then make sure they run in the correct direction by modifying the
+                    //      the setDirection() calls above.
+                    // Once the correct motors move in the correct direction re-comment this code.
 
             /*
             leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
@@ -179,40 +206,56 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
             */
 
-            // Send calculated power to wheels
-            leftFrontDrive.setPower(leftFrontPower);
-            rightFrontDrive.setPower(rightFrontPower);
-            leftBackDrive.setPower(leftBackPower);
-            rightBackDrive.setPower(rightBackPower);
-            jointA.setPower(swivel);
+                    // Send calculated power to wheels
+                    leftFrontDrive.setPower(leftFrontPower);
+                    rightFrontDrive.setPower(rightFrontPower);
+                    leftBackDrive.setPower(leftBackPower);
+                    rightBackDrive.setPower(rightBackPower);
+                    jointA.setPower(swivel);
 
-            if (Math.abs(linearSlide.getCurrentPosition()) > maxSlideThrow) {
-                /* Only allow retraction (positive) when over max throw */
-                if (extend > 0.0)
-                    linearSlide.setPower(extend);
-                else
-                    linearSlide.setPower(0.0); // stop the motor
+
+                    if (Math.abs(linearSlide.getCurrentPosition()) > maxSlideThrow) {
+                        /* Only allow retraction (positive) when over max throw */
+                        if (extend > 0.0)
+                            linearSlide.setPower(extend);
+                        else
+                            linearSlide.setPower(0.0); // stop the motor
+                    } else if (Math.abs(linearSlide.getCurrentPosition()) <= 80) {
+                        /* Only allow extension (negative) when we're near the initial position */
+                        if (extend < 0.0)
+                            linearSlide.setPower(extend);
+                        else
+                            linearSlide.setPower(0.0); // stop the motor
+                    } else {
+                        linearSlide.setPower(extend);
+                    }
+
+                    if (Math.abs(jointA.getCurrentPosition()) > maxSwivel) {
+                        /* Only allow retraction (positive) when over max throw */
+                        if (extend > 0.0)
+                            jointA.setPower(extend);
+                        else
+                            jointA.setPower(0.0); // stop the motor
+                    } else if (Math.abs(linearSlide.getCurrentPosition()) <= 80) {
+                        /* Only allow extension (negative) when we're near the initial position */
+                        if (extend < 0.0)
+                            jointA.setPower(extend);
+                        else
+                            jointA.setPower(0.0); // stop the motor
+                    } else {
+                        jointA.setPower(extend);
+                    }
+
+
+                    // Show the elapsed game time and wheel power.
+                    telemetry.addData("Status", "Run Time: " + runtime.toString());
+                    telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
+                    telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
+                    telemetry.addData("Slide position", "%d", Math.abs(linearSlide.getCurrentPosition()));
+                    telemetry.addData("Joint position", "%d", Math.abs(jointA.getCurrentPosition()));
+                    telemetry.update();
+                }
             }
-            else if (Math.abs(linearSlide.getCurrentPosition()) <= 80) {
-                /* Only allow extension (negative) when we're near the initial position */
-                if (extend < 0.0)
-                    linearSlide.setPower(extend);
-                else
-                    linearSlide.setPower(0.0); // stop the motor
-            }
-            else {
-                linearSlide.setPower(extend);
-            }
-
-
-
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
-            telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-            telemetry.addData("Slide position", "%d", Math.abs(linearSlide.getCurrentPosition() ));
-            telemetry.addData("Joint position", "%d", Math.abs(jointA.getCurrentPosition() ));
-            telemetry.update();
         }
-    }}
+    }
+}
