@@ -128,18 +128,22 @@ public class Grandma {
             double x = (recognition.getLeft() + recognition.getRight()) / 2;
             double y = (recognition.getTop() + recognition.getBottom()) / 2;
             double z = (x-(width/2));
+            int turndeg = 0;
+            float inches = 0;
 
             if(Math.abs(z)/width > 0.05){
                 if(z > 0){
-                    turn(5);
+                    turndeg = 1;
                 } else{
-                    turn(-5);
+                    turndeg = -1;
                 }
-            } else{
-               if(height-recognition.getBottom() > 0){
-                   forward(1);
-               }
+            }
+            float e = (float) (height-recognition.getBottom());
+            inches = (float) (e/23.0);
 
+            if (turndeg != 0 || inches != 0)
+            {
+                move(inches, turndeg);
             }
 
             telemetry.addData("", " ");
@@ -185,7 +189,24 @@ public class Grandma {
 
         while(leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy());
     }
+    public void move(float inches, int degree){
+        float amountPerInch = 152.4f;
+        int changePerDegree = 40;
+        int lf, lb, rf, rb;
+        lf = leftFront.getCurrentPosition();
+        lb = leftBack.getCurrentPosition();
+        rf = rightFront.getCurrentPosition();
+        rb = rightBack.getCurrentPosition();
 
+        int amount = (int)(amountPerInch * inches);
+
+        leftFront.setTargetPosition(lf + amount + (degree * changePerDegree));
+        leftBack.setTargetPosition(lb + amount + (degree * changePerDegree));
+        rightFront.setTargetPosition(rf + amount - (degree * changePerDegree));
+        rightBack.setTargetPosition(rb + amount - (degree * changePerDegree));
+
+        while(leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy());
+    }
     public void servoMin(){
         servo.setPosition(0.0);
     }
