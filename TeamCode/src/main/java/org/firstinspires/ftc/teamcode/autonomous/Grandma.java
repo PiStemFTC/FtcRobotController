@@ -27,7 +27,6 @@ public class Grandma {
         rightFront = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         leftBack = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightBack = hardwareMap.get(DcMotor.class, "rightBackDrive");
-        servo = hardwareMap.get(Servo.class, "servo");
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
@@ -59,7 +58,9 @@ public class Grandma {
     private DcMotor leftBack;
     private DcMotor rightFront;
     private DcMotor rightBack;
-    private Servo servo;
+    private DcMotor jointA = null;
+    private Servo clawLeft = null;
+    private Servo clawRight = null;
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
 
@@ -116,7 +117,7 @@ public class Grandma {
 
     }   // end method initTfod()
 
-    public void chaseDuck(Telemetry telemetry){
+    public boolean chaseDuck(Telemetry telemetry){
         final double width = 1280;
         final double height = 720;
 
@@ -144,6 +145,8 @@ public class Grandma {
             if (turndeg != 0 || inches != 0)
             {
                 move(inches, turndeg);
+            } else{
+                return true;
             }
 
             telemetry.addData("", " ");
@@ -154,9 +157,10 @@ public class Grandma {
 
             break;
         }
+        return false;
     }
 
-    public void forward(float inches){
+    public void forward(float inches) {
         float amountPerInch = 152.4f;
         int lf, lb, rf, rb;
         lf = leftFront.getCurrentPosition();
@@ -164,14 +168,14 @@ public class Grandma {
         rf = rightFront.getCurrentPosition();
         rb = rightBack.getCurrentPosition();
 
-        int amount = (int)(amountPerInch * inches);
+        int amount = (int) (amountPerInch * inches);
 
         leftFront.setTargetPosition(lf + amount);
         rightFront.setTargetPosition(rf + amount);
         rightBack.setTargetPosition(rb + amount);
         leftBack.setTargetPosition(lb + amount);
 
-        while(leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy());
+        while (leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy()) ;
     }
 
     public void turn(int degree){
@@ -207,11 +211,14 @@ public class Grandma {
 
         while(leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy());
     }
-    public void servoMin(){
-        servo.setPosition(0.0);
+
+    public void openClaw(){
+        clawLeft.setPosition(0.1);
+        clawRight.setPosition(0.9);
     }
 
-    public void servoMax(){
-        servo.setPosition(1.0);
+    public void closeClaw(){
+        clawLeft.setPosition(0.9);
+        clawRight.setPosition(0.1);
     }
 }

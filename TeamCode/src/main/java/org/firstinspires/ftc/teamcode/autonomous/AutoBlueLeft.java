@@ -27,15 +27,14 @@ public class AutoBlueLeft extends LinearOpMode {
         DRIVE_COUNTS_PER_MM = (HD_COUNTS_PER_REV * DRIVE_GEAR_REDUCTION);
         DRIVE_COUNT_PER_IN = DRIVE_COUNTS_PER_MM * 25.4;
 
-        grandma.servoMin();
         waitForStart();
         if (opModeIsActive()){
             //2000 = 33.5 cm
             //60 per cm
             //152 per in
+
             grandma.turn(-90);
             grandma.forward(46);
-            grandma.servoMax();
             sleep(2000);
 
 
