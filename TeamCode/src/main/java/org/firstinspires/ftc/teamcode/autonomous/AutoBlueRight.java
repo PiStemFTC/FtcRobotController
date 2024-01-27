@@ -26,12 +26,10 @@ public class AutoBlueRight extends LinearOpMode {
         DRIVE_COUNTS_PER_MM = (HD_COUNTS_PER_REV * DRIVE_GEAR_REDUCTION);
         DRIVE_COUNT_PER_IN = DRIVE_COUNTS_PER_MM * 25.4;
 
-        grandma.servoMin();
         waitForStart();
         if (opModeIsActive()){
             grandma.turn(-90);
             grandma.forward(95);
-            grandma.servoMax();
             sleep(2000);
 
         }

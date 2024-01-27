@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -75,7 +76,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
     private DcMotor linearSlide = null;
     private DcMotor launcher = null;
     private DcMotor jointA = null;
-    //private Servo servo = null;
+    private DcMotor jointB = null;
     private Servo clawLeft = null;
     private Servo clawRight = null;
 
@@ -92,11 +93,14 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
         launcher = hardwareMap.get(DcMotor.class, "launcher");
         jointA = hardwareMap.get(DcMotor.class, "jointA");
-        //servo = hardwareMap.get(Servo.class, "servo");
+        jointB = hardwareMap.get(DcMotor.class, "jointB");
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
 
-        boolean currentPixelButtonState = false;
+
+
+
+        //boolean currentPixelButtonState = false;
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -112,6 +116,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        jointB.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
@@ -156,24 +161,21 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
                 launcher.setPower(0.0);
             }
 
-            while (opModeIsActive()) {
                 // check to see if we need to move the servo.
                 if (gamepad2.left_bumper) {
                     // move to 0 degrees.
-                    clawLeft.setPosition(0);
-                } else if (gamepad2.left_trigger > 0.1) {
+                    clawLeft.setPosition(0.1);
+                } else if (gamepad2.left_trigger > 0.25) {
                     // move to 90 degrees.
-                    clawLeft.setPosition(0.5);
+                    clawLeft.setPosition(0.9);
                 }
-
-                while (opModeIsActive()) {
                     // check to see if we need to move the servo.
                     if (gamepad2.right_bumper) {
                         // move to 0 degrees.
-                        clawRight.setPosition(0);
-                    } else if (gamepad2.right_trigger > 0.1 ) {
+                        clawRight.setPosition(0.9);
+                    } else if (gamepad2.right_trigger > 0.25 ) {
                         // move to 90 degrees.
-                        clawRight.setPosition(0.5);
+                        clawRight.setPosition(0.1);
                     }
 
                     // Normalize the values so no wheel power exceeds 100%
@@ -211,7 +213,9 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
                     rightFrontDrive.setPower(rightFrontPower);
                     leftBackDrive.setPower(leftBackPower);
                     rightBackDrive.setPower(rightBackPower);
-                    jointA.setPower(swivel);
+                    jointA.setPower(swivel*.25);
+                    jointB.setPower(swivel
+                    );
 
 
                     if (Math.abs(linearSlide.getCurrentPosition()) > maxSlideThrow) {
@@ -257,5 +261,4 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
                 }
             }
         }
-    }
-}
+
