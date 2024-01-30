@@ -35,6 +35,7 @@ public class AutoBlueLeft extends LinearOpMode {
 
             grandma.turn(-90);
             grandma.forward(46);
+            grandma.openClaw();
             sleep(2000);
 
 

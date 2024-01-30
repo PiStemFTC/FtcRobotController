@@ -33,6 +33,7 @@ public class AutoRedRight extends LinearOpMode {
             //152 per in
             grandma.turn(90);
             grandma.forward(46);
+            grandma.openClaw();
             sleep(2000);
 
 

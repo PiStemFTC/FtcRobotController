@@ -117,13 +117,19 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         jointB.setDirection(DcMotorSimple.Direction.REVERSE);
+        linearSlide.setDirection(DcMotor.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        //linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        final int maxSlideThrow = 5000;
+        // Changes: (Leonard, Scrimage)
+        // 1. linearSlide STOP_AND_RESET_ENCODER re-enabled
+        // 2. abs removed from linearSlide telemetry update
+
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        final int maxSlideThrow = 3000; //5000
         final int maxSwivel = 1000;
 
         //servo.setPosition(0.0);
@@ -141,7 +147,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             double yaw = gamepad1.right_stick_x;
             boolean launch = gamepad1.y;
             double swivel = gamepad2.left_stick_y;
-            double extend = gamepad2.right_stick_y;
+            double extend = -gamepad2.right_stick_y;
             //boolean openL = gamepad1.left_bumper;
             //boolean openR = gamepad1.right_bumper;
             //boolean closeR = gamepad2.right_trigger > 0.1;
@@ -213,49 +219,51 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
                     rightFrontDrive.setPower(rightFrontPower);
                     leftBackDrive.setPower(leftBackPower);
                     rightBackDrive.setPower(rightBackPower);
-                    jointA.setPower(swivel*.25);
-                    jointB.setPower(swivel
-                    );
+                    jointA.setPower(swivel * .5);
+                    jointB.setPower(swivel * .5);
 
-
-                    if (Math.abs(linearSlide.getCurrentPosition()) > maxSlideThrow) {
-                        /* Only allow retraction (positive) when over max throw */
-                        if (extend > 0.0)
-                            linearSlide.setPower(extend);
-                        else
-                            linearSlide.setPower(0.0); // stop the motor
-                    } else if (Math.abs(linearSlide.getCurrentPosition()) <= 80) {
-                        /* Only allow extension (negative) when we're near the initial position */
+                    if (linearSlide.getCurrentPosition() > maxSlideThrow) {
+                        /* Only allow retraction (negative) when over max throw */
                         if (extend < 0.0)
                             linearSlide.setPower(extend);
                         else
                             linearSlide.setPower(0.0); // stop the motor
+                    } else if (linearSlide.getCurrentPosition() <= 80) {
+                        /* Only allow extension (positive) when we're near the initial position */
+                        if (extend > 0.0)
+                            linearSlide.setPower(extend);
+                        else
+                            linearSlide.setPower(0.0); // stop the motor
+                    } else if (linearSlide.getCurrentPosition() <= 500) {
+                        if (extend < 0.0)
+                            linearSlide.setPower(extend * .25);
+                        else
+                            linearSlide.setPower(extend);
                     } else {
                         linearSlide.setPower(extend);
                     }
 
-                    if (Math.abs(jointA.getCurrentPosition()) > maxSwivel) {
-                        /* Only allow retraction (positive) when over max throw */
-                        if (extend > 0.0)
-                            jointA.setPower(extend);
-                        else
-                            jointA.setPower(0.0); // stop the motor
-                    } else if (Math.abs(linearSlide.getCurrentPosition()) <= 80) {
-                        /* Only allow extension (negative) when we're near the initial position */
-                        if (extend < 0.0)
-                            jointA.setPower(extend);
-                        else
-                            jointA.setPower(0.0); // stop the motor
-                    } else {
-                        jointA.setPower(extend);
-                    }
-
+//                    if (Math.abs(jointA.getCurrentPosition()) > maxSwivel) {
+//                        /* Only allow retraction (positive) when over max throw */
+//                        if (extend > 0.0)
+//                            jointA.setPower(extend);
+//                        else
+//                            jointA.setPower(0.0); // stop the motor
+//                    } else if (Math.abs(jointA.getCurrentPosition()) <= 80) {
+//                        /* Only allow extension (negative) when we're near the initial position */
+//                        if (extend < 0.0)
+//                            jointA.setPower(extend);
+//                        else
+//                            jointA.setPower(0.0); // stop the motor
+//                    } else {
+//                        jointA.setPower(extend);
+//                    }
 
                     // Show the elapsed game time and wheel power.
                     telemetry.addData("Status", "Run Time: " + runtime.toString());
                     telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontPower, rightFrontPower);
                     telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackPower, rightBackPower);
-                    telemetry.addData("Slide position", "%d", Math.abs(linearSlide.getCurrentPosition()));
+                    telemetry.addData("Slide position", "%d, %f", linearSlide.getCurrentPosition(), extend);
                     telemetry.addData("Joint position", "%d", Math.abs(jointA.getCurrentPosition()));
                     telemetry.update();
                 }
