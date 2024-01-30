@@ -32,6 +32,7 @@ public class AutoRedLeft extends LinearOpMode {
             //2000 = 33.5 cm
             //60 per cm
             //152 per in
+            /*
             switch(mode){
                 case Findduck:
                     if(grandma.chaseDuck(telemetry)) {
@@ -47,11 +48,14 @@ public class AutoRedLeft extends LinearOpMode {
                     sleep(2000);
                     break;
             }
+             */
 
-            //grandma.turn(90);
-            //grandma.forward(46);
+            grandma.turn(90);
+            grandma.forward(46);
+            grandma.openClaw();
+            sleep(2000);
             telemetry.update();
-
+            break;
 
 
 

@@ -27,6 +27,8 @@ public class Grandma {
         rightFront = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         leftBack = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightBack = hardwareMap.get(DcMotor.class, "rightBackDrive");
+        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
+        clawRight = hardwareMap.get(Servo.class, "clawRight");
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
@@ -220,5 +222,8 @@ public class Grandma {
     public void closeClaw(){
         clawLeft.setPosition(0.9);
         clawRight.setPosition(0.1);
+    }
+
+    public void sleep(int i) {
     }
 }

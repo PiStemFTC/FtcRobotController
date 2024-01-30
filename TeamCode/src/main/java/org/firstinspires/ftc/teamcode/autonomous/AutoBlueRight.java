@@ -30,6 +30,7 @@ public class AutoBlueRight extends LinearOpMode {
         if (opModeIsActive()){
             grandma.turn(-90);
             grandma.forward(95);
+            grandma.openClaw();
             sleep(2000);
 
         }
