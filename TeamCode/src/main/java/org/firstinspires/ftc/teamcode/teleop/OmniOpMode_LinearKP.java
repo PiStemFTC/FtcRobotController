@@ -251,13 +251,13 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 
 		    if (swivel < 0.0) {
 			    int p = jointA.getCurrentPosition();
-			    p -= swivel*10;
+			    p -= swivel*10.0;
 			    jointA.setTargetPosition(p);
 			    jointB.setTargetPosition(p);
 		    }
 		    else if (swivel > 0.0) {
 			    int p = jointA.getCurrentPosition();
-			    p += swivel*10;
+			    p += swivel*10.0;
 			    jointA.setTargetPosition(p);
 			    jointB.setTargetPosition(p);
 		    }
