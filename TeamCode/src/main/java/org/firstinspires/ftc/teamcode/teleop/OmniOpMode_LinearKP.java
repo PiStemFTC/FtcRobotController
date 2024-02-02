@@ -119,6 +119,14 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
         jointB.setDirection(DcMotorSimple.Direction.REVERSE);
         linearSlide.setDirection(DcMotor.Direction.REVERSE);
 
+        jointA.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jointA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        jointB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        jointB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+	jointA.setPower(1.0);
+	jointB.setPower(1.0);
+
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -219,8 +227,6 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
                     rightFrontDrive.setPower(rightFrontPower);
                     leftBackDrive.setPower(leftBackPower);
                     rightBackDrive.setPower(rightBackPower);
-                    jointA.setPower(swivel * .5);
-                    jointB.setPower(swivel * .5);
 
                     if (linearSlide.getCurrentPosition() > maxSlideThrow) {
                         /* Only allow retraction (negative) when over max throw */
@@ -242,6 +248,19 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
                     } else {
                         linearSlide.setPower(extend);
                     }
+
+		    if (swivel < 0.0) {
+			    int p = jointA.getCurrentPosition();
+			    p -= swivel*10;
+			    jointA.setTargetPosition(p);
+			    jointB.setTargetPosition(p);
+		    }
+		    else if (swivel > 0.0) {
+			    int p = jointA.getCurrentPosition();
+			    p += swivel*10;
+			    jointA.setTargetPosition(p);
+			    jointB.setTargetPosition(p);
+		    }
 
 //                    if (Math.abs(jointA.getCurrentPosition()) > maxSwivel) {
 //                        /* Only allow retraction (positive) when over max throw */
