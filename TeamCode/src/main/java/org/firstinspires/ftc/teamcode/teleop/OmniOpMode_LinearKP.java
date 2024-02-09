@@ -33,9 +33,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.autonomous.ArenaColor;
+import org.firstinspires.ftc.teamcode.autonomous.Grandma;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -81,6 +83,39 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
     private Servo clawLeft = null;
     private Servo clawRight = null;
 
+	private Grandma grandma;
+	boolean leftClawOpen = true;
+	boolean rightClawOpen = true;
+	long grabTimeRight = 0;
+	long grabTimeLeft = 0;
+	private void toggleLeftClaw(){
+		long now = System.currentTimeMillis();
+		if(now-grabTimeLeft < 500){
+			return;
+		}
+		if(leftClawOpen){
+			grandma.closeLeftClaw();
+			leftClawOpen = false;
+		} else{
+			grandma.openLeftClaw();
+			leftClawOpen = true;
+		}
+		grabTimeLeft = now;
+	}
+	private void toggleRightClaw(){
+		long now = System.currentTimeMillis();
+		if(now-grabTimeRight < 500){
+			return;
+		}
+		if(rightClawOpen){
+			grandma.closeRightClaw();
+			rightClawOpen = false;
+		} else{
+			grandma.openRightClaw();
+			rightClawOpen = true;
+		}
+		grabTimeRight = now;
+	}
     @Override
     public void runOpMode() {
 		final int SwivelIdle = 0;
@@ -88,7 +123,9 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 		final int SwivelDown = 2;
 
 		int swivelState = SwivelIdle;
-
+		grandma = new Grandma(ArenaColor.Blue);
+		grandma.initializeHardware(hardwareMap);
+		
 		// Initialize the hardware variables. Note that the strings used here must correspond
 		// to the names assigned during the robot configuration step on the DS or RC devices.
 		leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFrontDrive");
@@ -185,20 +222,12 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 			}
 
 			// check to see if we need to move the servo.
-			if (gamepad2.left_bumper) {
-				// move to 0 degrees.
-				clawLeft.setPosition(0.1);
-			} else if (gamepad2.left_trigger > 0.25) {
-				// move to 90 degrees.
-				clawLeft.setPosition(0.9);
+			if (gamepad2.left_bumper || gamepad2.left_trigger > 0.25) {
+				toggleLeftClaw();
 			}
             // check to see if we need to move the servo.
-            if (gamepad2.right_bumper) {
-				// move to 0 degrees.
-				clawRight.setPosition(0.9);
-            } else if (gamepad2.right_trigger > 0.25 ) {
-				// move to 90 degrees.
-				clawRight.setPosition(0.1);
+            if (gamepad2.right_bumper || gamepad2.right_trigger > 0.25) {
+				toggleRightClaw();
             }
 
             // Normalize the values so no wheel power exceeds 100%

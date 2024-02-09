@@ -18,7 +18,7 @@ import java.util.List;
 public class Grandma {
     private static final boolean USE_WEBCAM = true;
     ArenaColor color;
-    Grandma(ArenaColor color){
+    public Grandma(ArenaColor color){
         this.color = color;
     }
 
@@ -215,13 +215,25 @@ public class Grandma {
     }
 
     public void openClaw(){
-        clawLeft.setPosition(0.1);
-        clawRight.setPosition(0.9);
+        clawLeft.setPosition(0.4);
+        clawRight.setPosition(0.6);
     }
 
     public void closeClaw(){
-        clawLeft.setPosition(0.9);
-        clawRight.setPosition(0.1);
+        clawLeft.setPosition(0.6);
+        clawRight.setPosition(0.4);
+    }
+     public void closeLeftClaw(){
+         clawLeft.setPosition(0.6);
+     }
+    public void closeRightClaw(){
+        clawRight.setPosition(0.4);
+    }
+    public void openLeftClaw(){
+        clawLeft.setPosition(0.4);
+    }
+    public void openRightClaw(){
+        clawRight.setPosition(0.6);
     }
 
     public void sleep(int i) {
