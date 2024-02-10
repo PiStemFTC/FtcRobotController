@@ -112,13 +112,17 @@ public class Grandma {
         visionPortal = builder.build();
 
         // Set confidence threshold for TFOD recognitions, at any time.
-        tfod.setMinResultConfidence(0.75f);
+        tfod.setMinResultConfidence(0.65f);
 
         // Disable or re-enable the TFOD processor at any time.
         visionPortal.setProcessorEnabled(tfod, true);
 
     }   // end method initTfod()
 
+    public boolean isDuckVisible(){
+        List<Recognition> currentRecognitions = tfod.getRecognitions();
+        return 0 < currentRecognitions.size();
+    }
     public boolean chaseDuck(Telemetry telemetry){
         final double width = 1280;
         final double height = 720;
