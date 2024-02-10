@@ -29,6 +29,7 @@ public class Grandma {
         rightBack = hardwareMap.get(DcMotor.class, "rightBackDrive");
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
+        linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
     }
 
     public void initializeHardware(HardwareMap hardwareMap){
@@ -38,29 +39,36 @@ public class Grandma {
         rightBack = hardwareMap.get(DcMotor.class, "rightBackDrive");
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
+        linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
+        linearSlide.setDirection(DcMotor.Direction.REVERSE);
 
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         leftBack.setTargetPosition(0);
         leftFront.setTargetPosition(0);
         rightBack.setTargetPosition(0);
         rightFront.setTargetPosition(0);
+        linearSlide.setTargetPosition(0);
 
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         leftBack.setPower(1.0);
         leftFront.setPower(1.0);
         rightBack.setPower(1.0);
         rightFront.setPower(1.0);
+        linearSlide.setPower(0.5);
 
         initTfod(hardwareMap);
     }
@@ -74,6 +82,7 @@ public class Grandma {
     private Servo clawRight = null;
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
+    private DcMotor linearSlide;
 
     private void initTfod(HardwareMap hardwareMap) {
         String fileName = "TeamElementBlue.tflite";
@@ -139,7 +148,7 @@ public class Grandma {
             double x = (recognition.getLeft() + recognition.getRight()) / 2;
             double z = (x-(width/2));
 
-            if (Math.abs(z) / width > 0.15) {
+            if (Math.abs(z) / width < 0.45) {
                 return true;
             }
         }
@@ -254,6 +263,8 @@ public class Grandma {
         rightFront.setTargetPosition(rf - amount);
         rightBack.setTargetPosition(rb + amount);
         leftBack.setTargetPosition(lb - amount);
+
+        while(leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy());
     }
 
     public void openClaw(){
@@ -280,4 +291,12 @@ public class Grandma {
 
     public void sleep(int i) {
     }
+
+    public void setSlidePosition1(){
+        linearSlide.setTargetPosition(500);
+    }
+    public void setSlidePosition2(){
+        linearSlide.setTargetPosition(600);
+    }
+
 }

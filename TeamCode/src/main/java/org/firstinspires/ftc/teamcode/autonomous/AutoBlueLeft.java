@@ -40,9 +40,10 @@ public class AutoBlueLeft extends LinearOpMode {
         grandma.isDuckVisible();
         grandma.closeLeftClaw();
         grandma.closeRightClaw();
+        grandma.setSlidePosition1();
         waitForStart();
         timeRef = System.currentTimeMillis();
-        grandma.forward(4);
+        grandma.forward(8);
         while(opModeIsActive()){
             long now = System.currentTimeMillis();
             long elapsedTime = now-timeRef;
@@ -50,14 +51,16 @@ public class AutoBlueLeft extends LinearOpMode {
                 if(grandma.isDuckVisible()){
                     state = S_GoDuck;
                 }else {
-                   if(elapsedTime < 8000){
+                   if(elapsedTime < 2000){
                        sleep(100);
                    }else{
                        if(Target == Center) {
                            Target = Left;
+                           timeRef=now;
                            grandma.turn(-25);
                        } else if(Target == Left){
                            Target = Right;
+                           timeRef=now;
                            grandma.turn(50);
                        } else{
                            state = S_GiveUp;
@@ -66,17 +69,28 @@ public class AutoBlueLeft extends LinearOpMode {
                 }
             }else if(state == S_GoDuck){
                 if(Target == Center) {
-                    grandma.forward(20);
+                    grandma.forward(15);
                     grandma.openLeftClaw();
                     sleep(200);
                     grandma.forward(-6);
                     state = S_Done;
-                }
-                else if(Target == Left || Target == Right){
-                    grandma.forward(17);
+                } else if(Target == Left){
+                    grandma.turn(25);
+                    grandma.forward(14);
+                    grandma.turn(-37);
+                   // grandma.forward(-2);
                     grandma.openLeftClaw();
                     sleep(200);
-                    grandma.forward(-6);
+                    grandma.forward(-2);
+                    state = S_Done;
+                } else if(Target == Right){
+                    grandma.turn(-25);
+                    grandma.forward(14);
+                    grandma.turn(60);
+                    // grandma.forward(-2);
+                    grandma.openLeftClaw();
+                    sleep(200);
+                    grandma.forward(-2);
                     state = S_Done;
                 }
             } else if(state == S_GiveUp){
