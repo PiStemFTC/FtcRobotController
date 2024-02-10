@@ -53,15 +53,32 @@ public class AutoBlueLeft extends LinearOpMode {
                    if(elapsedTime < 8000){
                        sleep(100);
                    }else{
-                       state = S_GiveUp;
+                       if(Target == Center) {
+                           Target = Left;
+                           grandma.turn(-25);
+                       } else if(Target == Left){
+                           Target = Right;
+                           grandma.turn(50);
+                       } else{
+                           state = S_GiveUp;
+                       }
                    }
                 }
             }else if(state == S_GoDuck){
-                grandma.forward(20);
-                grandma.openLeftClaw();
-                sleep(200);
-                grandma.forward(-6);
-                state = S_Done;
+                if(Target == Center) {
+                    grandma.forward(20);
+                    grandma.openLeftClaw();
+                    sleep(200);
+                    grandma.forward(-6);
+                    state = S_Done;
+                }
+                else if(Target == Left || Target == Right){
+                    grandma.forward(17);
+                    grandma.openLeftClaw();
+                    sleep(200);
+                    grandma.forward(-6);
+                    state = S_Done;
+                }
             } else if(state == S_GiveUp){
 
             }else if(state == S_Done){

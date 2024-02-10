@@ -186,6 +186,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 		final int maxSwivel = 1000;
 
 		//servo.setPosition(0.0);
+		grandma.closeClaw();
 		waitForStart();
 		runtime.reset();
 

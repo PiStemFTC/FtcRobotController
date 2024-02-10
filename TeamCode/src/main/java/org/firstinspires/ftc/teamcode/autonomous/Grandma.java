@@ -129,8 +129,21 @@ public class Grandma {
     }   // end method initTfod()
 
     public boolean isDuckVisible(){
+        final double width = 1280;
+        final double height = 720;
+
         List<Recognition> currentRecognitions = tfod.getRecognitions();
-        return 0 < currentRecognitions.size();
+
+        // Step through the list of recognitions and display info for each one.
+        for (Recognition recognition : currentRecognitions) {
+            double x = (recognition.getLeft() + recognition.getRight()) / 2;
+            double z = (x-(width/2));
+
+            if (Math.abs(z) / width > 0.15) {
+                return true;
+            }
+        }
+        return false;
     }
     public boolean chaseDuck(Telemetry telemetry){
         final double width = 1280;
@@ -225,6 +238,22 @@ public class Grandma {
         rightBack.setTargetPosition(rb + amount - (degree * changePerDegree));
 
         while(leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy());
+    }
+
+    public void strafe(int inches) {
+        float amountPerInch = 152.4f;
+        int lf, lb, rf, rb;
+        lf = leftFront.getCurrentPosition();
+        lb = leftBack.getCurrentPosition();
+        rf = rightFront.getCurrentPosition();
+        rb = rightBack.getCurrentPosition();
+
+        int amount = (int)(amountPerInch * inches);
+
+        leftFront.setTargetPosition(lf + amount);
+        rightFront.setTargetPosition(rf - amount);
+        rightBack.setTargetPosition(rb + amount);
+        leftBack.setTargetPosition(lb - amount);
     }
 
     public void openClaw(){
