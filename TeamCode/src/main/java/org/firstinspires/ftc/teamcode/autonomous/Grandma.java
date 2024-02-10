@@ -219,25 +219,25 @@ public class Grandma {
     }
 
     public void openClaw(){
-        clawLeft.setPosition(0.4);
-        clawRight.setPosition(0.6);
+        openLeftClaw();
+        openRightClaw();
     }
 
     public void closeClaw(){
-        clawLeft.setPosition(0.6);
-        clawRight.setPosition(0.4);
+        closeLeftClaw();
+        closeRightClaw();
     }
      public void closeLeftClaw(){
-         clawLeft.setPosition(0.6);
+         clawLeft.setPosition(0.65);
      }
     public void closeRightClaw(){
-        clawRight.setPosition(0.4);
+        clawRight.setPosition(0.35);
     }
     public void openLeftClaw(){
-        clawLeft.setPosition(0.4);
+        clawLeft.setPosition(0.3);
     }
     public void openRightClaw(){
-        clawRight.setPosition(0.6);
+        clawRight.setPosition(0.7);
     }
 
     public void sleep(int i) {
