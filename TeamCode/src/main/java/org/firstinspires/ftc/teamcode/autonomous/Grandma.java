@@ -22,6 +22,15 @@ public class Grandma {
         this.color = color;
     }
 
+    public void mapWithoutInitialize(HardwareMap hardwareMap){
+        leftFront = hardwareMap.get(DcMotor.class, "leftFrontDrive");
+        rightFront = hardwareMap.get(DcMotor.class, "rightFrontDrive");
+        leftBack = hardwareMap.get(DcMotor.class, "leftBackDrive");
+        rightBack = hardwareMap.get(DcMotor.class, "rightBackDrive");
+        clawLeft = hardwareMap.get(Servo.class, "clawLeft");
+        clawRight = hardwareMap.get(Servo.class, "clawRight");
+    }
+
     public void initializeHardware(HardwareMap hardwareMap){
         leftFront = hardwareMap.get(DcMotor.class, "leftFrontDrive");
         rightFront = hardwareMap.get(DcMotor.class, "rightFrontDrive");
