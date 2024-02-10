@@ -17,6 +17,16 @@ public class AutoBlueLeft extends LinearOpMode {
         int HD_COUNTS_PER_REV;
         double DRIVE_GEAR_REDUCTION;
         double DRIVE_COUNTS_PER_MM;
+        final int Center = 1;
+        final int Left = 2;
+        final int Right = 3;
+        int Target = Center;
+        final int S_Look = 0;
+        final int S_GoDuck = 1;
+        final int S_GiveUp = 2;
+        final int S_Done = 3;
+        int state = S_Look;
+        long timeRef = 0;
 
         grandma = new Grandma(ArenaColor.Blue);
         grandma.initializeHardware(hardwareMap);
@@ -27,20 +37,40 @@ public class AutoBlueLeft extends LinearOpMode {
         DRIVE_COUNTS_PER_MM = (HD_COUNTS_PER_REV * DRIVE_GEAR_REDUCTION);
         DRIVE_COUNT_PER_IN = DRIVE_COUNTS_PER_MM * 25.4;
 
+        grandma.isDuckVisible();
+        grandma.closeLeftClaw();
+        grandma.closeRightClaw();
         waitForStart();
-        if (opModeIsActive()){
-            //2000 = 33.5 cm
-            //60 per cm
-            //152 per in
+        timeRef = System.currentTimeMillis();
+        grandma.forward(4);
+        while(opModeIsActive()){
+            long now = System.currentTimeMillis();
+            long elapsedTime = now-timeRef;
+            if(state == S_Look){
+                if(grandma.isDuckVisible()){
+                    state = S_GoDuck;
+                }else {
+                   if(elapsedTime < 8000){
+                       sleep(100);
+                   }else{
+                       state = S_GiveUp;
+                   }
+                }
+            }else if(state == S_GoDuck){
+                grandma.forward(20);
+                grandma.openLeftClaw();
+                sleep(200);
+                grandma.forward(-6);
+                state = S_Done;
+            } else if(state == S_GiveUp){
 
-            grandma.turn(-90);
-            grandma.forward(46);
-            grandma.openClaw();
-            sleep(2000);
+            }else if(state == S_Done){
 
-
-
-
+            }
+            telemetry.addData("State", "%d", state);
+            telemetry.addData("Elap Time", "%d", elapsedTime);
+            telemetry.addData("seesDuck", "%b", grandma.isDuckVisible());
+            telemetry.update();
 
         }
 
