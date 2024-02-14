@@ -72,7 +72,11 @@ public class AutoBlueRight extends LinearOpMode {
                     grandma.forward(15);
                     grandma.openLeftClaw();
                     sleep(200);
-                    grandma.forward(-6);
+                    grandma.forward(-20);
+                    grandma.turn(-90);
+                    grandma.forward(38);
+                    grandma.openRightClaw();
+                    grandma.setSlidePosition0();
                     state = S_Done;
                 } else if(Target == Left){
                     grandma.turn(25);
@@ -89,6 +93,8 @@ public class AutoBlueRight extends LinearOpMode {
                     grandma.strafe(-8);
                     grandma.forward(97);
                     grandma.openRightClaw();
+                    grandma.setSlidePosition0();
+
                     state = S_Done;
                 } else if(Target == Right){
                     grandma.turn(-25);
@@ -104,6 +110,7 @@ public class AutoBlueRight extends LinearOpMode {
                     grandma.strafe(-8);
                     grandma.forward(95);
                     grandma.openRightClaw();
+                    grandma.setSlidePosition0();
                     state = S_Done;
                 }
             } else if(state == S_GiveUp){

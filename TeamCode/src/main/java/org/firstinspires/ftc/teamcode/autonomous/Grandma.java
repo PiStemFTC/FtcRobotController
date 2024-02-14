@@ -299,4 +299,7 @@ public class Grandma {
         linearSlide.setTargetPosition(600);
     }
 
+    public void setSlidePosition0(){
+        linearSlide.setTargetPosition(0);
+    }
 }
