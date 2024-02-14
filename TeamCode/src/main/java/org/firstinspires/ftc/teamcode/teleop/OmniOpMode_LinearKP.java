@@ -279,7 +279,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 				if (extend > 0.0)
 					linearSlide.setPower(extend);
 				else
-					linearSlide.setPower(0.0); // stop the motor
+					linearSlide.setPower(0.05); // stop the motor
             } else if (linearSlide.getCurrentPosition() <= 500) {
 				if (extend < 0.0)
 					linearSlide.setPower(extend * .25);
@@ -294,7 +294,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 				swivelTarget += swivel * 2.5;
 				swivelState = SwivelUp;
 			}
-			else if (swivelTarget > 0 && swivel < 0.0) {
+			else if ((swivelTarget > 0 || gamepad2.y) && swivel < 0.0) {
 				/* Allow to decrease */
 				swivelTarget += swivel * 2.5;
 				swivelState = SwivelDown;
