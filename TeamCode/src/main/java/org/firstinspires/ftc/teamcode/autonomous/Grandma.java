@@ -298,7 +298,7 @@ public class Grandma {
          clawLeft.setPosition(0.65);
      }
     private void closeRightClaw_(){
-        clawRight.setPosition(0.35);
+        clawRight.setPosition(0.30);
     }
     private void openLeftClaw_(){
         clawLeft.setPosition(0.3);

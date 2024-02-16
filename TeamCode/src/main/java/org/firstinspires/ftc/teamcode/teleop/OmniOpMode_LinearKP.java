@@ -294,7 +294,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 				swivelTarget += swivel * 2.5;
 				swivelState = SwivelUp;
 			}
-			else if ((swivelTarget > 0 || gamepad2.y) && swivel < 0.0) {
+			else if ((swivelTarget > -10 || gamepad2.y) && swivel < 0.0) {
 				/* Allow to decrease */
 				swivelTarget += swivel * 2.5;
 				swivelState = SwivelDown;
@@ -306,12 +306,12 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 				}
 			}
 
-			if (0 <= swivelTarget && swivelTarget <= swivelMax) {
+			if (-10 <= swivelTarget && swivelTarget <= swivelMax) {
 				jointA.setTargetPosition(swivelTarget);
 				jointB.setTargetPosition(swivelTarget);
 			}
-			else if (swivelTarget < 0) {
-				swivelTarget = 0;
+			else if (swivelTarget < -10) {
+				swivelTarget = -10;
 			}
 			else if (swivelTarget > swivelMax) {
 				swivelTarget = swivelMax;
