@@ -327,19 +327,21 @@ public class Grandma {
     }
 
     public void setSlidePosition1(){
-        linearSlide.setTargetPosition(500);
-        swivel.setTargetPosition(20);
+       // linearSlide.setTargetPosition(500);
+        //swivel.setTargetPosition(20);
 
     }
     public void setSlidePosition2(){
-        linearSlide.setTargetPosition(600);
+
+        //linearSlide.setTargetPosition(600);
     }
 
     public void setSlidePosition3(){
-        linearSlide.setTargetPosition(600);
+
+        //linearSlide.setTargetPosition(600);
     }
     public void setSlidePosition0(){
-        linearSlide.setTargetPosition(0);
-        swivel.setTargetPosition(0);
+        //linearSlide.setTargetPosition(0);
+        //swivel.setTargetPosition(0);
     }
 }

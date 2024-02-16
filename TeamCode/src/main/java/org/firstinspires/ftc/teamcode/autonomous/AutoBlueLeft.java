@@ -88,7 +88,7 @@ public class AutoBlueLeft extends LinearOpMode {
                     sleep(200);
                     grandma.forward(-6);
                     grandma.turn(-90);
-                    grandma.forward(27);
+                    grandma.forward(29);
                     grandma.openRightClaw();
                     grandma.setSlidePosition0();
                     state = S_Done;
