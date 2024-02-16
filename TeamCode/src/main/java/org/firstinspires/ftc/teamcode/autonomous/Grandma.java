@@ -18,8 +18,13 @@ import java.util.List;
 public class Grandma {
     private static final boolean USE_WEBCAM = true;
     ArenaColor color;
+
+    private boolean mirror = false;
     public Grandma(ArenaColor color){
         this.color = color;
+        if(this.color == ArenaColor.Red){
+            mirror = true;
+        }
     }
 
     public void mapWithoutInitialize(HardwareMap hardwareMap){
@@ -40,16 +45,21 @@ public class Grandma {
         clawLeft = hardwareMap.get(Servo.class, "clawLeft");
         clawRight = hardwareMap.get(Servo.class, "clawRight");
         linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
+        swivel = hardwareMap.get(DcMotor.class, "jointA");
+
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         linearSlide.setDirection(DcMotor.Direction.REVERSE);
+        //swivel.setDirection(DcMotor.Direction.REVERSE);
+
 
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        swivel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         leftBack.setTargetPosition(0);
@@ -57,18 +67,24 @@ public class Grandma {
         rightBack.setTargetPosition(0);
         rightFront.setTargetPosition(0);
         linearSlide.setTargetPosition(0);
+        swivel.setTargetPosition(0);
+
 
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        swivel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         leftBack.setPower(1.0);
         leftFront.setPower(1.0);
         rightBack.setPower(1.0);
         rightFront.setPower(1.0);
         linearSlide.setPower(0.5);
+        swivel.setPower(0.1);
+
 
         initTfod(hardwareMap);
     }
@@ -77,7 +93,7 @@ public class Grandma {
     private DcMotor leftBack;
     private DcMotor rightFront;
     private DcMotor rightBack;
-    private DcMotor jointA = null;
+    private DcMotor swivel = null;
     private Servo clawLeft = null;
     private Servo clawRight = null;
     private TfodProcessor tfod;
@@ -216,6 +232,7 @@ public class Grandma {
     }
 
     public void turn(int degree){
+        if (mirror)degree = -degree;
         int changePerDegree = 40;
         int lf, lb, rf, rb;
         lf = leftFront.getCurrentPosition();
@@ -250,6 +267,7 @@ public class Grandma {
     }
 
     public void strafe(int inches) {
+        if (mirror)inches = -inches;
         float amountPerInch = 152.4f;
         int lf, lb, rf, rb;
         lf = leftFront.getCurrentPosition();
@@ -276,17 +294,33 @@ public class Grandma {
         closeLeftClaw();
         closeRightClaw();
     }
-     public void closeLeftClaw(){
+     private void closeLeftClaw_(){
          clawLeft.setPosition(0.65);
      }
-    public void closeRightClaw(){
+    private void closeRightClaw_(){
         clawRight.setPosition(0.35);
     }
-    public void openLeftClaw(){
+    private void openLeftClaw_(){
         clawLeft.setPosition(0.3);
     }
-    public void openRightClaw(){
+    private void openRightClaw_(){
         clawRight.setPosition(0.7);
+    }
+    public void closeLeftClaw(){
+        if(mirror)closeRightClaw_();
+        else closeLeftClaw_();
+    }
+    public void closeRightClaw(){
+        if(mirror)closeLeftClaw_();
+        else closeRightClaw_();
+    }
+    public void openLeftClaw(){
+        if(mirror)openRightClaw_();
+        else openLeftClaw_();
+    }
+    public void openRightClaw(){
+        if(mirror)openLeftClaw_();
+        else openRightClaw_();
     }
 
     public void sleep(int i) {
@@ -294,12 +328,18 @@ public class Grandma {
 
     public void setSlidePosition1(){
         linearSlide.setTargetPosition(500);
+        swivel.setTargetPosition(20);
+
     }
     public void setSlidePosition2(){
         linearSlide.setTargetPosition(600);
     }
 
+    public void setSlidePosition3(){
+        linearSlide.setTargetPosition(600);
+    }
     public void setSlidePosition0(){
         linearSlide.setTargetPosition(0);
+        swivel.setTargetPosition(0);
     }
 }

@@ -40,15 +40,19 @@ public class AutoBlueLeft extends LinearOpMode {
         grandma.isDuckVisible();
         grandma.closeLeftClaw();
         grandma.closeRightClaw();
+        sleep(500);
         grandma.setSlidePosition1();
         waitForStart();
         timeRef = System.currentTimeMillis();
         grandma.forward(8);
+        grandma.setSlidePosition0();//move claw out of the way
         while(opModeIsActive()){
             long now = System.currentTimeMillis();
             long elapsedTime = now-timeRef;
             if(state == S_Look){
                 if(grandma.isDuckVisible()){
+                    grandma.setSlidePosition1();
+                    sleep(200);
                     state = S_GoDuck;
                 }else {
                    if(elapsedTime < 2000){
@@ -57,11 +61,19 @@ public class AutoBlueLeft extends LinearOpMode {
                        if(Target == Center) {
                            Target = Left;
                            timeRef=now;
+                           grandma.setSlidePosition1();
+                           sleep(200);
                            grandma.turn(-25);
+                           grandma.setSlidePosition0();
+                           sleep(200);
                        } else if(Target == Left){
                            Target = Right;
                            timeRef=now;
+                           grandma.setSlidePosition1();
+                           sleep(200);
                            grandma.turn(50);
+                           grandma.setSlidePosition0();
+                           sleep(200);
                        } else{
                            state = S_GiveUp;
                        }
@@ -70,32 +82,50 @@ public class AutoBlueLeft extends LinearOpMode {
             }else if(state == S_GoDuck){
                 if(Target == Center) {
                     grandma.forward(15);
+                    grandma.setSlidePosition1();
+                    sleep(200);
                     grandma.openLeftClaw();
                     sleep(200);
                     grandma.forward(-6);
+                    grandma.turn(-90);
+                    grandma.forward(27);
+                    grandma.openRightClaw();
+                    grandma.setSlidePosition0();
                     state = S_Done;
                 } else if(Target == Left){
                     grandma.turn(25);
                     grandma.forward(14);
                     grandma.turn(-37);
                    // grandma.forward(-2);
+                    grandma.setSlidePosition1();
+                    sleep(200);
                     grandma.openLeftClaw();
                     sleep(200);
                     grandma.forward(-2);
+                    grandma.strafe(-12);
+                    grandma.turn(-40);
+                    grandma.forward(24);
+                    grandma.openRightClaw();
                     state = S_Done;
                 } else if(Target == Right){
                     grandma.turn(-25);
                     grandma.forward(14);
                     grandma.turn(60);
+                    grandma.setSlidePosition1();
+                    sleep(200);
                     // grandma.forward(-2);
                     grandma.openLeftClaw();
                     sleep(200);
-                    grandma.forward(-2);
+                    grandma.forward(-6);
+                    grandma.turn(-140);
+                    grandma.forward(27);
+                    grandma.openRightClaw();
                     state = S_Done;
                 }
             } else if(state == S_GiveUp){
 
             }else if(state == S_Done){
+                grandma.setSlidePosition0();
 
             }
             telemetry.addData("State", "%d", state);

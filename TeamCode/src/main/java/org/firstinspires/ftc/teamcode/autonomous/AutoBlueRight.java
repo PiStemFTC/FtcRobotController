@@ -40,6 +40,7 @@ public class AutoBlueRight extends LinearOpMode {
         grandma.isDuckVisible();
         grandma.closeLeftClaw();
         grandma.closeRightClaw();
+        sleep(500);
         grandma.setSlidePosition2();
         waitForStart();
         timeRef = System.currentTimeMillis();
@@ -69,12 +70,18 @@ public class AutoBlueRight extends LinearOpMode {
                 }
             }else if(state == S_GoDuck){
                 if(Target == Center) {
+                    grandma.setSlidePosition3();
                     grandma.forward(15);
+                    grandma.setSlidePosition1();
+                    sleep(200);
                     grandma.openLeftClaw();
                     sleep(200);
+                    //park
                     grandma.forward(-20);
+                    grandma.setSlidePosition3();
+                    grandma.strafe(8);
                     grandma.turn(-90);
-                    grandma.forward(38);
+                    grandma.forward(90);
                     grandma.openRightClaw();
                     grandma.setSlidePosition0();
                     state = S_Done;

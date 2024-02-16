@@ -279,7 +279,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 				if (extend > 0.0)
 					linearSlide.setPower(extend);
 				else
-					linearSlide.setPower(0.05); // stop the motor
+					linearSlide.setPower(0); // stop the motor
             } else if (linearSlide.getCurrentPosition() <= 500) {
 				if (extend < 0.0)
 					linearSlide.setPower(extend * .25);
