@@ -77,7 +77,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
     private DcMotor linearSlide = null;
-    private DcMotor launcher = null;
+    private Servo launcher = null;
     private DcMotor jointA = null;
     private DcMotor jointB = null;
     private Servo clawLeft = null;
@@ -134,7 +134,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 		rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
 		rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
 		linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
-		launcher = hardwareMap.get(DcMotor.class, "launcher");
+		launcher = hardwareMap.get(Servo.class, "launcher");
 		jointA = hardwareMap.get(DcMotor.class, "jointA");
 		jointB = hardwareMap.get(DcMotor.class, "jointB");
 		clawLeft = hardwareMap.get(Servo.class, "clawLeft");
@@ -201,7 +201,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 			double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
 			double lateral = gamepad1.left_stick_x;
 			double yaw = gamepad1.right_stick_x;
-			boolean launch = gamepad1.y;
+			boolean launch = gamepad1.x;
 			double swivel = -gamepad2.left_stick_y;
 			double extend = -gamepad2.right_stick_y;
 			//boolean openL = gamepad1.left_bumper;
@@ -218,9 +218,9 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 			double rightBackPower = axial + lateral - yaw;
 
 			if (launch) {
-				launcher.setPower(1.0);
+				launcher.setPosition(1.0);
 			} else {
-				launcher.setPower(0.0);
+				launcher.setPosition(0.0);
 			}
 
 			// check to see if we need to move the servo.
@@ -316,6 +316,8 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 			else if (swivelTarget > swivelMax) {
 				swivelTarget = swivelMax;
 			}
+
+
 
 			telemetry.addData("swivel target", "%d", swivelTarget);
 
