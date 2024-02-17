@@ -82,7 +82,7 @@ public class Grandma {
         leftFront.setPower(1.0);
         rightBack.setPower(1.0);
         rightFront.setPower(1.0);
-        linearSlide.setPower(0.5);
+        linearSlide.setPower(1.0);
         swivel.setPower(0.1);
 
 
@@ -152,6 +152,20 @@ public class Grandma {
         visionPortal.setProcessorEnabled(tfod, true);
 
     }   // end method initTfod()
+
+    public void helpImTrappedByTheRules(){
+        linearSlide.setTargetPosition(linearSlide.getCurrentPosition()+900);
+        while(linearSlide.isBusy());
+        swivel.setPower(.5);
+        swivel.setTargetPosition(-90);
+        while(swivel.isBusy());
+        swivel.setPower(0.0);
+        //swivel.setTargetPosition(-120);
+        sleep(100);
+        linearSlide.setTargetPosition(200);
+        while(linearSlide.isBusy());
+        swivel.setPower(0.0);
+    }
 
     public boolean isDuckVisible(){
         final double width = 1280;
