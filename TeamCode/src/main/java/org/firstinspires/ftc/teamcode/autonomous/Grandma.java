@@ -155,19 +155,42 @@ public class Grandma {
 
     }   // end method initTfod()
 
+    public void helpImTrappedByTheRules_(){
+        light.setPosition(-0.59);
+        swivel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearSlide.setTargetPosition(linearSlide.getCurrentPosition()+900);
+        while(linearSlide.isBusy());
+        swivel.setPower(-0.75);
+        //swivel.setTargetPosition(-73);
+        try {Thread.sleep(850); }catch(InterruptedException e){}
+        swivel.setPower(0.3);
+        //sleep(5000);
+        try {Thread.sleep(1000); }catch(InterruptedException e){}
+        swivel.setPower(0.0);
+        linearSlide.setTargetPosition(250);
+        while(linearSlide.isBusy());
+        swivel.setPower(0.0);
+        light.setPosition(0.87);
+    }
+
     public void helpImTrappedByTheRules(){
         light.setPosition(-0.59);
         swivel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linearSlide.setTargetPosition(linearSlide.getCurrentPosition()+900);
         while(linearSlide.isBusy());
-        swivel.setPower(-0.6);
+        swivel.setPower(-0.75);
         //swivel.setTargetPosition(-73);
-        try {Thread.sleep(900); }catch(InterruptedException e){}
+        long startP = swivel.getCurrentPosition();
+        long cP;
+        do{
+            cP = swivel.getCurrentPosition();
+        }while(cP >= startP - 90);
+        //try {Thread.sleep(850); }catch(InterruptedException e){}
         swivel.setPower(0.25);
         //sleep(5000);
         try {Thread.sleep(1000); }catch(InterruptedException e){}
         swivel.setPower(0.0);
-        linearSlide.setTargetPosition(350);
+        linearSlide.setTargetPosition(250);
         while(linearSlide.isBusy());
         swivel.setPower(0.0);
         light.setPosition(0.87);
@@ -315,7 +338,7 @@ public class Grandma {
         closeRightClaw();
     }
      private void closeLeftClaw_(){
-         clawLeft.setPosition(0.65);
+         clawLeft.setPosition(0.68);
      }
     private void closeRightClaw_(){
         clawRight.setPosition(0.30);

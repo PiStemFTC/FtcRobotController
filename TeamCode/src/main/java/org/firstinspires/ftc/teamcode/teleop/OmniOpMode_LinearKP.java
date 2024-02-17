@@ -187,6 +187,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 
 		//servo.setPosition(0.0);
 		grandma.closeClaw();
+		launcher.setPosition(0.5);
 		waitForStart();
 		runtime.reset();
 
@@ -218,9 +219,9 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 			double rightBackPower = axial + lateral - yaw;
 
 			if (launch) {
-				launcher.setPosition(1.0);
-			} else {
 				launcher.setPosition(0.0);
+			} else {
+				launcher.setPosition(0.5);
 			}
 
 			// check to see if we need to move the servo.

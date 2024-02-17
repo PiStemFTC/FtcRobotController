@@ -14,7 +14,7 @@ public class Infgath extends LinearOpMode {
 
         waitForStart();
         //grandma.swivel.setPower(0.0);
-        grandma.helpImTrappedByTheRules();
+        grandma.helpImTrappedByTheRules_();
         while(opModeIsActive()){
             telemetry.addData("help", "%d", grandma.swivel.getCurrentPosition());
             telemetry.update();
