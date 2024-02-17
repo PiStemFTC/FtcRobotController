@@ -39,6 +39,7 @@ public class AutoRedLeft extends LinearOpMode {
         grandma.setSlidePosition2();
         waitForStart();
         timeRef = System.currentTimeMillis();
+        grandma.helpImTrappedByTheRules();
         grandma.forward(8);
         while(opModeIsActive()){
             long now = System.currentTimeMillis();

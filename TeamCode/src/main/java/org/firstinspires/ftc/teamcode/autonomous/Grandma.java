@@ -46,6 +46,7 @@ public class Grandma {
         clawRight = hardwareMap.get(Servo.class, "clawRight");
         linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
         swivel = hardwareMap.get(DcMotor.class, "jointA");
+        light = hardwareMap.get(Servo.class, "light");
 
 
         leftBack.setDirection(DcMotor.Direction.REVERSE);
@@ -93,9 +94,10 @@ public class Grandma {
     private DcMotor leftBack;
     private DcMotor rightFront;
     private DcMotor rightBack;
-    private DcMotor swivel = null;
+    public DcMotor swivel = null;
     private Servo clawLeft = null;
     private Servo clawRight = null;
+    private Servo light = null;
     private TfodProcessor tfod;
     private VisionPortal visionPortal;
     private DcMotor linearSlide;
@@ -154,17 +156,21 @@ public class Grandma {
     }   // end method initTfod()
 
     public void helpImTrappedByTheRules(){
+        light.setPosition(-0.59);
+        swivel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linearSlide.setTargetPosition(linearSlide.getCurrentPosition()+900);
         while(linearSlide.isBusy());
-        swivel.setPower(.5);
-        swivel.setTargetPosition(-90);
-        while(swivel.isBusy());
+        swivel.setPower(-0.6);
+        //swivel.setTargetPosition(-73);
+        try {Thread.sleep(900); }catch(InterruptedException e){}
+        swivel.setPower(0.25);
+        //sleep(5000);
+        try {Thread.sleep(1000); }catch(InterruptedException e){}
         swivel.setPower(0.0);
-        //swivel.setTargetPosition(-120);
-        sleep(100);
-        linearSlide.setTargetPosition(200);
+        linearSlide.setTargetPosition(350);
         while(linearSlide.isBusy());
         swivel.setPower(0.0);
+        light.setPosition(0.87);
     }
 
     public boolean isDuckVisible(){

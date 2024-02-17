@@ -44,6 +44,7 @@ public class AutoBlueLeft extends LinearOpMode {
         grandma.setSlidePosition1();
         waitForStart();
         timeRef = System.currentTimeMillis();
+        grandma.helpImTrappedByTheRules();
         grandma.forward(8);
         grandma.setSlidePosition0();//move claw out of the way
         while(opModeIsActive()){
