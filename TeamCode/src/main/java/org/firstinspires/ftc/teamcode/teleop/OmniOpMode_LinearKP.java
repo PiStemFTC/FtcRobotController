@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -79,7 +78,6 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
     private DcMotor linearSlide = null;
     private Servo launcher = null;
     private DcMotor jointA = null;
-    private DcMotor jointB = null;
     private Servo clawLeft = null;
     private Servo clawRight = null;
 
@@ -136,7 +134,6 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 		linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
 		launcher = hardwareMap.get(Servo.class, "launcher");
 		jointA = hardwareMap.get(DcMotor.class, "jointA");
-		jointB = hardwareMap.get(DcMotor.class, "jointB");
 		clawLeft = hardwareMap.get(Servo.class, "clawLeft");
 		clawRight = hardwareMap.get(Servo.class, "clawRight");
 
@@ -159,44 +156,41 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 		leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
 		rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
 		rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-		jointB.setDirection(DcMotorSimple.Direction.REVERSE);
 		linearSlide.setDirection(DcMotor.Direction.REVERSE);
 
 		jointA.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		jointB.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 		jointA.setTargetPosition(0);
-		jointB.setTargetPosition(0);
 		jointA.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-		jointB.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 		jointA.setPower(0.5);
-		jointB.setPower(0.5);
 
 		jointA.setTargetPosition(0);
-		jointB.setTargetPosition(0);
 
 		// Wait for the game to start (driver presses PLAY)
 		telemetry.addData("Status", "Initialized");
 		telemetry.update();
 
 		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-		linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		final int maxSlideThrow = 3000; //5000
 		final int maxSwivel = 1000;
 
-		//servo.setPosition(0.0);
 		grandma.closeClaw();
 		launcher.setPosition(0.5);
 		waitForStart();
 		runtime.reset();
 
+		int homePosition = linearSlide.getCurrentPosition();
 		int swivelTarget = 0;
 		int swivelMax = 90;
+
+		linearSlide.setPower(.5);
 
 		// run until the end of the match (driver presses STOP)
 		while (opModeIsActive()) {
 			double max;
+
 
 			// POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
 			double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
@@ -205,10 +199,26 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 			boolean launch = gamepad1.x;
 			double swivel = -gamepad2.left_stick_y;
 			double extend = -gamepad2.right_stick_y;
+			boolean pickupPosition = gamepad2.a;
+			boolean placementPosition = gamepad2.x;
 			//boolean openL = gamepad1.left_bumper;
 			//boolean openR = gamepad1.right_bumper;
 			//boolean closeR = gamepad2.right_trigger > 0.1;
 			//boolean closeL = gamepad2.left_trigger > 0.1;
+
+
+			if(pickupPosition){ //if a is being held down
+				linearSlide.setTargetPosition(homePosition+150); //pickup position
+				jointA.setPower(0);
+			} else if(placementPosition) { //if x button is being held down
+				linearSlide.setTargetPosition(homePosition+2000);//placement position
+				jointA.setPower(.5);
+				jointA.setTargetPosition(100);
+			} else {
+				linearSlide.setTargetPosition(homePosition); //drive position (default)
+				jointA.setPower(0);
+			}
+
 
 
 			// Combine the joystick requests for each axis-motion to determine each wheel's power.
@@ -269,26 +279,26 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
 
-            if (linearSlide.getCurrentPosition() > maxSlideThrow) {
-				/* Only allow retraction (negative) when over max throw */
-				if (extend < 0.0)
-					linearSlide.setPower(extend);
-				else
-					linearSlide.setPower(0.0); // stop the motor
-            } else if (linearSlide.getCurrentPosition() <= 80) {
-				/* Only allow extension (positive) when we're near the initial position */
-				if (extend > 0.0)
-					linearSlide.setPower(extend);
-				else
-					linearSlide.setPower(0); // stop the motor
-            } else if (linearSlide.getCurrentPosition() <= 500) {
-				if (extend < 0.0)
-					linearSlide.setPower(extend * .25);
-				else
-					linearSlide.setPower(extend);
-            } else {
-				linearSlide.setPower(extend);
-            }
+//            if (linearSlide.getCurrentPosition() > maxSlideThrow) {
+//				/* Only allow retraction (negative) when over max throw */
+//				if (extend < 0.0)
+//					linearSlide.setPower(extend);
+//				else
+//					linearSlide.setPower(0.0); // stop the motor
+//            } else if (linearSlide.getCurrentPosition() <= 80) {
+//				/* Only allow extension (positive) when we're near the initial position */
+//				if (extend > 0.0)
+//					linearSlide.setPower(extend);
+//				else
+//					linearSlide.setPower(0); // stop the motor
+//            } else if (linearSlide.getCurrentPosition() <= 500) {
+//				if (extend < 0.0)
+//					linearSlide.setPower(extend * .25);
+//				else
+//					linearSlide.setPower(extend);
+//            } else {
+//				linearSlide.setPower(extend);
+//            }
 
 			if (swivelTarget < swivelMax && swivel > 0.0) {
 				/* Allow to increase */
@@ -307,16 +317,15 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 				}
 			}
 
-			if (-10 <= swivelTarget && swivelTarget <= swivelMax) {
-				jointA.setTargetPosition(swivelTarget);
-				jointB.setTargetPosition(swivelTarget);
-			}
-			else if (swivelTarget < -10) {
-				swivelTarget = -10;
-			}
-			else if (swivelTarget > swivelMax) {
-				swivelTarget = swivelMax;
-			}
+//			if (-10 <= swivelTarget && swivelTarget <= swivelMax) {
+//				jointA.setTargetPosition(swivelTarget);
+//			}
+//			else if (swivelTarget < -10) {
+//				swivelTarget = -10;
+//			}
+//			else if (swivelTarget > swivelMax) {
+//				swivelTarget = swivelMax;
+//			}
 
 
 

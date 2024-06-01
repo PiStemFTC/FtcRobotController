@@ -118,7 +118,19 @@ public class AutoRedRight extends LinearOpMode {
                     state = S_Done;
                 }
             } else if(state == S_GiveUp){
-
+                grandma.turn(-25);
+                grandma.forward(14);
+                grandma.turn(60);
+                grandma.setSlidePosition1();
+                sleep(200);
+                // grandma.forward(-2);
+                grandma.openLeftClaw();
+                sleep(200);
+                grandma.forward(-6);
+                grandma.turn(-140);
+                grandma.forward(27);
+                grandma.openRightClaw();
+                state = S_Done;
             }else if(state == S_Done){
                 grandma.setSlidePosition0();
 

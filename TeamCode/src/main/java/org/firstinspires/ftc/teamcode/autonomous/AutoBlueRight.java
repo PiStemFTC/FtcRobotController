@@ -122,6 +122,22 @@ public class AutoBlueRight extends LinearOpMode {
                     state = S_Done;
                 }
             } else if(state == S_GiveUp){
+                grandma.turn(-25);
+                grandma.forward(14);
+                grandma.turn(60);
+                // grandma.forward(-2);
+                grandma.openLeftClaw();
+                sleep(200);
+                //grandma.forward(-2);
+                grandma.strafe(16);
+                grandma.turn(-147);
+                //grandma.forward(-22);
+                grandma.strafe(-8);
+                grandma.forward(95);
+                grandma.openRightClaw();
+                grandma.setSlidePosition0();
+                state = S_Done;
+
 
             }else if(state == S_Done){
 
