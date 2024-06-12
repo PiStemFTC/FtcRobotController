@@ -171,6 +171,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 		telemetry.addData("Status", "Initialized");
 		telemetry.update();
 
+		linearSlide.setTargetPosition(0);
 		linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 		final int maxSlideThrow = 3000; //5000
@@ -216,7 +217,17 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 				jointA.setTargetPosition(100);
 			} else {
 				linearSlide.setTargetPosition(homePosition); //drive position (default)
-				jointA.setPower(0);
+				//while(linearSlide.isBusy());
+				//jointA.setPower(-0.75);
+				//long startP = jointA.getCurrentPosition();
+				//long cP;
+				//do{
+				//	cP = jointA.getCurrentPosition();
+				//}while(cP >= startP - 90);
+				jointA.setPower(0.25);
+
+				try {Thread.sleep(1000); }catch(InterruptedException e){}
+				jointA.setPower(0.0);
 			}
 
 
