@@ -186,6 +186,9 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 		int swivelTarget = 0;
 		int swivelMax = 90;
 
+		int xstate = 0;
+		long xtime = 0;
+
 		linearSlide.setPower(.5);
 
 		// run until the end of the match (driver presses STOP)
@@ -212,11 +215,29 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 				linearSlide.setTargetPosition(homePosition+150); //pickup position
 				jointA.setPower(0);
 			} else if(placementPosition) { //if x button is being held down
+				xstate = 1;
 				linearSlide.setTargetPosition(homePosition+2000);//placement position
 				jointA.setPower(.5);
-				jointA.setTargetPosition(100);
+				jointA.setTargetPosition(80);
 			} else {
 				linearSlide.setTargetPosition(homePosition); //drive position (default)
+				if (xstate == 1) {
+					xtime = System.currentTimeMillis();
+					xstate = 2;
+					jointA.setTargetPosition(15);
+					jointA.setPower(0.0);
+				} else if (xstate == 2) {
+					long now = System.currentTimeMillis();
+					if (now - xtime >= 1000) {
+						jointA.setPower(0.0);
+						xstate = 0;
+					} else if (now - xtime >= 100) {
+						jointA.setPower(0.15);
+					} else {
+						jointA.setPower(0.25);
+
+					}
+				}
 				//while(linearSlide.isBusy());
 				//jointA.setPower(-0.75);
 				//long startP = jointA.getCurrentPosition();
@@ -224,10 +245,10 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 				//do{
 				//	cP = jointA.getCurrentPosition();
 				//}while(cP >= startP - 90);
-				jointA.setPower(0.25);
+				//jointA.setPower(0.25);
 
-				try {Thread.sleep(1000); }catch(InterruptedException e){}
-				jointA.setPower(0.0);
+				//try {Thread.sleep(1000); }catch(InterruptedException e){}
+				//jointA.setPower(0.0);
 			}
 
 
@@ -349,6 +370,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
             telemetry.addData("Slide position", "%d, %f", linearSlide.getCurrentPosition(), extend);
             telemetry.addData("Joint position", "%d", jointA.getCurrentPosition());
             telemetry.addData("Target position", "%d", jointA.getTargetPosition());
+			telemetry.addData("xstate", "%d", xstate);
             telemetry.update();
 		}
 	}
