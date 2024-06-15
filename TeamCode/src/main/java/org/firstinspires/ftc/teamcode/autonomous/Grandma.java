@@ -257,7 +257,7 @@ public class Grandma {
     }
 
     public void forward(float inches) {
-        float amountPerInch = 152.4f;
+        float amountPerInch = 114.3f;
         int lf, lb, rf, rb;
         lf = leftFront.getCurrentPosition();
         lb = leftBack.getCurrentPosition();
@@ -291,7 +291,7 @@ public class Grandma {
         while(leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy());
     }
     public void move(float inches, int degree){
-        float amountPerInch = 152.4f;
+        float amountPerInch = 114.3f;
         int changePerDegree = 40;
         int lf, lb, rf, rb;
         lf = leftFront.getCurrentPosition();
@@ -311,7 +311,7 @@ public class Grandma {
 
     public void strafe(int inches) {
         if (mirror)inches = -inches;
-        float amountPerInch = 152.4f;
+        float amountPerInch = 114.3f;
         int lf, lb, rf, rb;
         lf = leftFront.getCurrentPosition();
         lb = leftBack.getCurrentPosition();
