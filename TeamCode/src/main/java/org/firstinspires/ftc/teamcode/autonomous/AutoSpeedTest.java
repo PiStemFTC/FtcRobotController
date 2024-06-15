@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-package org.firstinspires.ftc.teamcode.autonomous;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -47,14 +45,14 @@ public class AutoSpeedTest extends LinearOpMode {
         waitForStart();
         timeRef = System.currentTimeMillis();
         grandma.helpImTrappedByTheRules();
-        grandma.forward(8);
+        //grandma.forward(8);
         grandma.setSlidePosition0();//move claw out of the way
-        while(opModeIsActive()){
-            grandma.forward(12);
+        //while(opModeIsActive()){
+            grandma.forward(24);
             telemetry.addData("seesDuck", "%b", grandma.isDuckVisible());
             telemetry.update();
 
-        }
+       // }
 
     }
 
