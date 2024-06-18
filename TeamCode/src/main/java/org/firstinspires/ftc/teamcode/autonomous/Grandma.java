@@ -79,10 +79,10 @@ public class Grandma {
         swivel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        leftBack.setPower(1.0);
-        leftFront.setPower(1.0);
-        rightBack.setPower(1.0);
-        rightFront.setPower(1.0);
+        leftBack.setPower(0.5);
+        leftFront.setPower(0.5);
+        rightBack.setPower(0.5);
+        rightFront.setPower(0.5);
         linearSlide.setPower(1.0);
         swivel.setPower(0.1);
 
@@ -276,7 +276,7 @@ public class Grandma {
 
     public void turn(int degree){
         if (mirror)degree = -degree;
-        int changePerDegree = 40;
+        int changePerDegree = 20;
         int lf, lb, rf, rb;
         lf = leftFront.getCurrentPosition();
         lb = leftBack.getCurrentPosition();
@@ -292,7 +292,7 @@ public class Grandma {
     }
     public void move(float inches, int degree){
         float amountPerInch = 76.2f;
-        int changePerDegree = 40;
+        int changePerDegree = 20;
         int lf, lb, rf, rb;
         lf = leftFront.getCurrentPosition();
         lb = leftBack.getCurrentPosition();
