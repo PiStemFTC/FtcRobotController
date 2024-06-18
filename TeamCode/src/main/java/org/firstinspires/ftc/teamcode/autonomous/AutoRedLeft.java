@@ -40,7 +40,7 @@ public class AutoRedLeft extends LinearOpMode {
         waitForStart();
         timeRef = System.currentTimeMillis();
         grandma.helpImTrappedByTheRules();
-        grandma.forward(8);
+        grandma.forward(5.5f);
         while(opModeIsActive()){
             long now = System.currentTimeMillis();
             long elapsedTime = now-timeRef;
