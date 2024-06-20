@@ -212,7 +212,7 @@ public class OmniOpMode_LinearKP extends LinearOpMode {
 
 
 			if(pickupPosition){ //if a is being held down
-				linearSlide.setTargetPosition(homePosition+150); //pickup position
+				linearSlide.setTargetPosition(homePosition+235); //pickup position
 				jointA.setPower(0);
 			} else if(placementPosition) { //if x button is being held down
 				xstate = 1;
