@@ -79,10 +79,10 @@ public class Grandma {
         swivel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        leftBack.setPower(0.5);
-        leftFront.setPower(0.5);
-        rightBack.setPower(0.5);
-        rightFront.setPower(0.5);
+        leftBack.setPower(0.65);
+        leftFront.setPower(0.65);
+        rightBack.setPower(0.65);
+        rightFront.setPower(0.65);
         linearSlide.setPower(1.0);
         swivel.setPower(0.1);
 
@@ -276,17 +276,19 @@ public class Grandma {
 
     public void turn(int degree){
         if (mirror)degree = -degree;
-        int changePerDegree = 20;
+        float changePerDegree = 20.5f;
+        float a = degree;
+
         int lf, lb, rf, rb;
         lf = leftFront.getCurrentPosition();
         lb = leftBack.getCurrentPosition();
         rf = rightFront.getCurrentPosition();
         rb = rightBack.getCurrentPosition();
 
-        leftFront.setTargetPosition(lf + (degree * changePerDegree));
-        leftBack.setTargetPosition(lb + (degree * changePerDegree));
-        rightFront.setTargetPosition(rf - (degree * changePerDegree));
-        rightBack.setTargetPosition(rb - (degree * changePerDegree));
+        leftFront.setTargetPosition(lf + (int)(a * changePerDegree));
+        leftBack.setTargetPosition(lb + (int)(a * changePerDegree));
+        rightFront.setTargetPosition(rf - (int)(a * changePerDegree));
+        rightBack.setTargetPosition(rb - (int)(a * changePerDegree));
 
         while(leftFront.isBusy() || leftBack.isBusy() || rightFront.isBusy() || rightBack.isBusy());
     }
@@ -370,7 +372,7 @@ public class Grandma {
     }
 
     public void setSlidePosition1(){
-       // linearSlide.setTargetPosition(500);
+       //linearSlide.setTargetPosition(500);
         //swivel.setTargetPosition(20);
 
     }

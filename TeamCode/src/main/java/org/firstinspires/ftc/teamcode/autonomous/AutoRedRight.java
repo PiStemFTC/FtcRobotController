@@ -39,7 +39,7 @@ public class AutoRedRight extends LinearOpMode {
         timeRef = System.currentTimeMillis();
         grandma.helpImTrappedByTheRules();
         //sleep(50000);
-        grandma.forward(5.5f);
+        grandma.forward(8.0f);
         grandma.setSlidePosition0();//move claw out of the way
         while(opModeIsActive()){
             long now = System.currentTimeMillis();
