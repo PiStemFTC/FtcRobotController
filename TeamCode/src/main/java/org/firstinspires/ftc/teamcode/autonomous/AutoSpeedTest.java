@@ -48,8 +48,9 @@ public class AutoSpeedTest extends LinearOpMode {
         //grandma.forward(8);
         grandma.setSlidePosition0();//move claw out of the way
         //while(opModeIsActive()){
-            grandma.forward(24);
-            telemetry.addData("seesDuck", "%b", grandma.isDuckVisible());
+            //grandma.forward(24);
+            //telemetry.addData("seesDuck", "%b", grandma.isDuckVisible());
+        grandma.lookForAprilTag(hardwareMap,telemetry);
             telemetry.update();
 
        // }
