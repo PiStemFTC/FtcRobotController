@@ -484,4 +484,9 @@ public class Grandma {
         //linearSlide.setTargetPosition(0);
         //swivel.setTargetPosition(0);
     }
+     public void setPlacementPosition(){
+         linearSlide.setTargetPosition(2000);//placement position
+         swivel.setPower(.5);
+         swivel.setTargetPosition(80);
+     }
 }
